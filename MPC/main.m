@@ -3,7 +3,7 @@
 % loud=1; % 0 or 1
 
 %% SETUP ENV
-scene = 1; % 1 or 2
+scene = 1;
 addpath("PLANT\","LMPC\","HELPERS\","PLANNER\");
 
 %% SAMPLING TIMES
@@ -11,7 +11,7 @@ simTs=master.simTs; % Simulation timestep
 ctrlTs=0.01; % Control timestep
 planningTs=0.1; % Planning timestep
 
-%% Simulation Parameters
+%% Simulation Parameters... details -> PLANT/
 robot= ROBOT(setupRobotParams,simTs,1); % Plant
 
 sim.x0= [0.75 ; 0.65 ;0; 0; 0;0;0]; % Initial condition
@@ -28,12 +28,12 @@ end
 sim.tsim=  master.tsim; % Max Time
 sim.x_min= 0; sim.x_max= 3; sim.y_min= 0; sim.y_max= 5; % Map bounds
 
-%% Planner Initialization - NMPC Planner
+%% Planner Initialization - NMPC Planner... details -> PLANNER/
 % CasADi solver setup
 pl=setupPlanner(planningTs);
 [pl_solver,pl_args,f_temp]= pl_prob_setup(pl,sim,robot);
 
-%% Controller Initialization
+%% Controller Initialization ... details -> LMPC/
 ctrl=LMPC(ctrlTs,1,setupMPCparams(pl.v_min,pl.v_max),setupMPCsystem,loud);
 
 %% Viz Setup - For simulation graphics visualization

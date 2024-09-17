@@ -119,22 +119,11 @@ for j=1:K
     tau_r(j)=tau_r_sol(ctrl_count+1);
     ctrl_count=ctrl_count+1;
     
-    if mrac_switch==1
-        taus= mrac.Kin'*[tau_l(j);tau_r(j)];
-        taus= taus+mrac.Ky'*X_MRAC_vec(:,j);
-        taus= taus+mrac.Ke'*err_mrac_vec(:,j);
-        tau_l_mrac(j)=taus(1);
-        tau_r_mrac(j)=taus(2);
-    elseif mrac_switch==2
-        taus= [tau_l(j);tau_r(j)];
-        taus= taus+mrac.Ke'*err_mrac_vec(:,j);
-        tau_l_mrac(j)=taus(1);
-        tau_r_mrac(j)=taus(2);
-    else
-        taus= [tau_l(j);tau_r(j)];
-        tau_l_mrac(j)=tau_l(j);
-        tau_r_mrac(j)=tau_r(j);
-    end
+    taus= [tau_l(j);tau_r(j)];
+    taus= taus+mrac.Ke'*err_mrac_vec(:,j);
+    tau_l_mrac(j)=min(11.5, max(-11.5, taus(1)));
+    tau_r_mrac(j)=min(11.5, max(-11.5, taus(2)));
+
     control_effort(j)= norm(([tau_l_mrac(j);tau_r_mrac(j)]-[tau_l_prev;tau_r_prev]),2);    
     tau_l_prev=tau_l_mrac(j);
     tau_r_prev=tau_r_mrac(j);

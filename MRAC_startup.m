@@ -1,21 +1,32 @@
 clc;close all;
-sim_choice=1;
+
+sim_choice=1; % TURN ON IF YOU WANT TO RUN A SIM
 
 if sim_choice
     clc;clear all;close all;
-    perc=5;attack=1;
+    
+    perc=5; % MANIPULATE THE PARAMETER PERTURBATION PERCENTAGE
+    attack=1; % TURNS ON PARAMETER PERTURBATION
+    loud = 0; % Plays video of the whole simulation if its set to 1
+    
+    % Baseline parameters
+    master.m_p_0=4;  master.l_0= 0.53;
 
-     master.m_p_0=4;  master.l_0= 0.53;
-     master.tsim=20; master.simTs=0.01;
-     master.sine_min_freq= 0.1;
-     master.sine_max_freq= 20;
-     master.sine_modulation=0.001;
+    % Simulation time and step
+    master.tsim=20; master.simTs=0.01;
 
-     master.m_vec= varyParamsDiscrete(master.m_p_0,perc,randi([1 3]),randi([9 20]),master.tsim,master.simTs,1);
-     [master.t,master.l_vec]= varyParamsSmoothSine(master.l_0,...
-         perc,master.sine_min_freq,master.sine_max_freq,...
-         master.sine_modulation,master.tsim,master.simTs,1);
+    % Sine properties for l_p perturbation
+    master.sine_min_freq= 0.1; master.sine_max_freq= 20; master.sine_modulation=1e-6;
 
+    % Function that varies m_p. Ouputs m_p(t)
+    master.m_vec= varyParamsDiscrete(master.m_p_0,75,randi([1 3]),randi([9 20]),master.tsim,master.simTs,1);
+
+    % Function that varies l_p. Outputs l_p(t)
+    [master.t,master.l_vec]= varyParamsSmoothSine(master.l_0,...
+        perc,master.sine_min_freq,master.sine_max_freq,...
+        master.sine_modulation,master.tsim,master.simTs,1,0);
+    
+    % Simulates the vanilla MPC... Open-> MPC/main.m for details
     cd MPC\
      loud=0; 
 
@@ -24,6 +35,7 @@ if sim_choice
      clc;close all;
     cd ..
     
+    % Simulates the Adaptive Predictive Control... APC/main.m for details
     cd APC\
      loud=0;
      main;
@@ -31,6 +43,9 @@ if sim_choice
      clc;close all;
     cd ..
 end
+
+
+%% PLOTTING
 
 line_width=3;
 
@@ -200,10 +215,18 @@ legend('MPC','APC','Bounds',"FontSize",14);
 xlabel("Time (s)","FontSize",14); ylabel("Pitch Rate (deg/s)","FontSize",14)
 
 figure(507)
-plot(master.t,master.m_vec);
+plot(master.t,master.m_vec,'LineWidth',2);
+hold on
+plot(master.t,master.m_p_0*ones(length(master.m_vec)),'LineWidth',2);
+hold off
+ylim([3 7]);
 xlabel('Time (s)'); ylabel('Mass (Kg)');
 title("Mass");
+
 figure(508)
-plot(master.t,master.l_vec);
+plot(master.t,master.l_vec,'LineWidth',2);
+hold on
+plot(master.t,master.l_0*ones(length(master.m_vec)),'LineWidth',2);
+hold off
 xlabel('Time (s)'); ylabel('Length (m)');
 title("Length");

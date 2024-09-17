@@ -36,7 +36,7 @@ function params = setupMRAC(sys,Ts,mpc)
 
     [params.Ad,params.Bd,~,~] = ssdata(c2d(ss(params.A,params.B,params.C,params.D),Ts));
     factor= 1e-2;%5e-2;
-    params.lambda= 7e-1;
+    params.lambda= 3e-1;
     
     params.gamma_st  = factor*diag([2;0.5;2;0.5]);
     params.gamma_err = factor*diag([2;0.5;2;0.5]);

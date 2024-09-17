@@ -144,15 +144,17 @@ classdef LMPC
         function [tau_l,tau_r,prediction,run_time]=updateMPC(this,feedback,reference)
             %% Transforming measurement to controller states
             
-            % Controller States -> X_L,X_R, X_L_Dot, X_R_Dot theta, thetaDot
+            % Controller States -> X_L_Dot, X_R_Dot, theta, thetaDot
             x0= feedback;
             
             %% State part of the objective function
             q_new1 = reshape((-this.Q*reference(:,1:end-1)),this.nx*(this.N),1); 
             q_new2 = -this.QT*reference(:,this.N+1);
+
+            %% Input part of the obj func
             q_new3 = zeros(this.N*this.nu,1);
 
-            q_new= [q_new1;q_new2;q_new3];
+            q_new= [q_new1;q_new2;q_new3]; % Total objective
             
             %% Equality constraints
             leq = [-x0; zeros(this.N*this.nx, 1)];
