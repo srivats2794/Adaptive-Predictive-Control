@@ -40,8 +40,7 @@ mrac= MRAC_CONTROLLER(setupMRAC(setupMPCsystem,ctrlTs,ctrl));
 err_mrac_vec= zeros(4,1);
 X_MRAC_bar_vec= zeros(4,1);
 X_MRAC_vec= zeros(4,1);
-K_mrac.Kin= mrac.Kin; K_mrac.Ky=mrac.Ky;K_mrac.Ke= mrac.Ke;
-gains_MRAC_vec(1)= K_mrac; % Kdel,Ky,Ke
+gains_MRAC_vec(1).Ke= mrac.Ke; % Kdel,Ky,Ke
 %% Viz Setup - For simulation graphics visualization
 viz.w= robot.w;
 viz.l= robot.r_w*2+0.02;
@@ -71,7 +70,8 @@ cascaded_adaptive.control_effort= control_effort;
 cascaded_adaptive.exec_time= per_loop_time_mod;
 cascaded_adaptive.theta= fbk_vec(6,1:end-1);
 cascaded_adaptive.thetaDot= fbk_vec(7,1:end-1);
-
+cascaded_adaptive.tau_l = tau_l_mrac;
+cascaded_adaptive.tau_r = tau_r_mrac;
 cascaded_adaptive.gains = gains_MRAC_vec;
 cascaded_adaptive.err = err_mrac_vec;
 cascaded_adaptive.failure=failure;

@@ -5,7 +5,7 @@ sim_choice=1; % TURN ON IF YOU WANT TO RUN A SIM
 if sim_choice
     clc;clear all;close all;
     
-    perc=5; % MANIPULATE THE PARAMETER PERTURBATION PERCENTAGE
+    perc=25; % MANIPULATE THE PARAMETER PERTURBATION PERCENTAGE
     attack=1; % TURNS ON PARAMETER PERTURBATION
     loud = 0; % Plays video of the whole simulation if its set to 1
     
@@ -16,16 +16,21 @@ if sim_choice
     master.tsim=20; master.simTs=0.01;
 
     % Sine properties for l_p perturbation
-    master.sine_min_freq= 0.1; master.sine_max_freq= 20; master.sine_modulation=1e-6;
+    master.sine_min_freq= 1; master.sine_max_freq= 20; master.sine_modulation=1e-6;
 
     % Function that varies m_p. Ouputs m_p(t)
-    master.m_vec= varyParamsDiscrete(master.m_p_0,75,randi([1 3]),randi([9 20]),master.tsim,master.simTs,1);
+    master.m_vec= varyParamsDiscrete(master.m_p_0,perc,randi([1 3]),randi([9 20]),master.tsim,master.simTs,1);
 
     % Function that varies l_p. Outputs l_p(t)
-    [master.t,master.l_vec]= varyParamsSmoothSine(master.l_0,...
-        perc,master.sine_min_freq,master.sine_max_freq,...
-        master.sine_modulation,master.tsim,master.simTs,1,0);
+    % [master.t,master.l_vec]= varyParamsSmoothSine(master.l_0,...
+    %     perc,master.sine_min_freq,master.sine_max_freq,...
+    %     master.sine_modulation,master.tsim,master.simTs,1,0);
     
+    [master.t,master.l_vec]= simpleFourierSeries(master.l_0,...
+        perc,master.sine_min_freq,master.sine_max_freq,...
+        10,master.tsim,master.simTs,1);
+    
+
     % Simulates the vanilla MPC... Open-> MPC/main.m for details
     cd MPC\
      loud=0; 

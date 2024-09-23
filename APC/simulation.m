@@ -133,9 +133,8 @@ for j=1:K
     
     X_MRAC_vec(:,j+1)= fbk(4:7);
     err_mrac_vec(:,j+1) = X_MRAC_vec(:,j+1)-X_MRAC_bar_vec(:,j+1);
-    mrac=mrac.updateMRACgains(X_MRAC_vec(:,j+1),err_mrac_vec(:,j+1),[tau_l(j);tau_r(j)]);
-    K_mrac.Kin= mrac.Kin; K_mrac.Ky=mrac.Ky;K_mrac.Ke= mrac.Ke;
-    gains_MRAC_vec(j+1)= K_mrac;
+    mrac=mrac.updateMRACgains(err_mrac_vec(:,j+1));
+    gains_MRAC_vec(j+1).Ke= mrac.Ke;
     fbk_vec(:,j+1) = fbk;
 end
 pl_loop_time = toc(pl_loop);  
