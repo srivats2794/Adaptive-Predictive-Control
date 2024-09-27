@@ -64,7 +64,7 @@ end
 
 cascaded_adaptive.t= t;
 cascaded_adaptive.obs_mapping= obs_mapping;
-cascaded_adaptive.violation_line= pl.ego_safety_diam/2 + sim.obs_diam/2;
+cascaded_adaptive.violation_line= 0.55;
 cascaded_adaptive.error_ego= error_ego;
 cascaded_adaptive.control_effort= control_effort;
 cascaded_adaptive.exec_time= per_loop_time_mod;

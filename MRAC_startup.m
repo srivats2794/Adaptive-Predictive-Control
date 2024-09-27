@@ -1,3 +1,4 @@
+function [cascaded, cascaded_adaptive] = MRAC_startup(perc,plot_choice)
 clc;close all;
 %%
 sim_choice=1; % TURN ON IF YOU WANT TO RUN A SIM
@@ -5,12 +6,13 @@ sim_choice=1; % TURN ON IF YOU WANT TO RUN A SIM
 if sim_choice
     clc;clearvars -except perc plot_choice;close all;
     %%
-    if ~exist('perc','var')
-        perc=25; % MANIPULATE THE PARAMETER PERTURBATION PERCENTAGE
+    if nargin<1
+        plot_choice=1; % Do you want the plots or no?
     end
-    if ~exist('plot_choice','var')
-        plot_choice=1; % MANIPULATE THE PARAMETER PERTURBATION PERCENTAGE
+    if nargin<2
+        perc=5; % MANIPULATE THE PARAMETER PERTURBATION PERCENTAGE
     end
+   
     attack=1; % TURNS ON PARAMETER PERTURBATION
     loud = 0; % Plays video of the whole simulation if its set to 1
 
@@ -51,7 +53,7 @@ if sim_choice
      loud=0; 
 
      main;
-     clearvars -except cascaded loud attack_perc attack master plot_choice
+     clearvars -except cascaded loud master plot_choice
      clc;close all;
     cd ..
     
@@ -59,7 +61,7 @@ if sim_choice
     cd APC\
      loud=0;
      main;
-     clearvars -except cascaded cascaded_adaptive attack_perc master plot_choice
+     clearvars -except cascaded cascaded_adaptive master plot_choice
      clc;close all;
     cd ..
 end

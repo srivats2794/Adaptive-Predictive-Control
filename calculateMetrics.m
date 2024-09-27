@@ -1,72 +1,66 @@
-function result = calculateMetrics(APC, MPC)
+function result = calculateMetrics(MPC, APC)
     % Initialize result struct
     result = struct('winner', 'inconclusive','APCbonus',0,'MPCbonus',0);
     
+    % Bonus metric: Computation time
+    if max(APC.exec_time) < max(MPC.exec_time)
+        result.APCbonus=result.APCbonus+1;
+    else
+        result.MPCbonus=result.MPCbonus+1;
+    end
+
+    % Bonus metric: control effort
+    if max(APC.control_effort) < max(MPC.control_effort)
+        result.APCbonus=result.APCbonus+1;
+    else
+        result.MPCbonus=result.MPCbonus+1;
+    end
+    
     % First metric: Failure to solve
-    if APC.failed && ~MPC.failed
+    if APC.failure && ~MPC.failure
         result.winner = 'MPC';
-        result.MPC_wins = 1;
         return;
-    elseif ~APC.failed && MPC.failed
+    elseif ~APC.failure && MPC.failure
         result.winner = 'APC';
-        result.APC_wins = 1;
         return;
-    elseif APC.failed && MPC.failed
+    elseif APC.failure && MPC.failure
         return;  % Inconclusive if both failed
     end
     
     % Second metric: Obstacle avoidance
-    APC_minDist = min(APC.obstacleDist(:));
-    MPC_minDist = min(MPC.obstacleDist(:));
+    APC_minDist = min(APC.obs_mapping(:));
+    MPC_minDist = min(MPC.obs_mapping(:));
     
-    if APC_minDist > 0 && MPC_minDist == 0
+    if APC_minDist >= APC.violation_line && MPC_minDist < APC.violation_line
         result.winner = 'APC';
-        result.APC_wins = 1;
         return;
-    elseif MPC_minDist > 0 && APC_minDist == 0
+    elseif MPC_minDist > APC.violation_line && APC_minDist < APC.violation_line
         result.winner = 'MPC';
-        result.MPC_wins = 1;
         return;
-    elseif APC_minDist == 0 && MPC_minDist == 0
+    elseif APC_minDist < APC.violation_line && MPC_minDist < APC.violation_line
         % Both violated, check who violated lesser
         if APC_minDist > MPC_minDist
-            result.winner = 'APC';
-            result.APC_wins = 1;
+            result.APCbonus=result.APCbonus+1;
         else
-            result.winner = 'MPC';
-            result.MPC_wins = 1;
+            result.MPCbonus=result.MPCbonus+1;
         end
-        return;
     end
     
     % Third metric: Convergence to goal
-    if APC.goalDist == 0 && MPC.goalDist > 0
+    if min(APC.error_ego) <= 0.01 && min(MPC.error_ego) > 0.01
         result.winner = 'APC';
-        result.APC_wins = 1;
         return;
-    elseif MPC.goalDist == 0 && APC.goalDist > 0
+    elseif min(MPC.error_ego) <= 0.01 && min(APC.error_ego) > 0.01
         result.winner = 'MPC';
-        result.MPC_wins = 1;
         return;
-    elseif APC.goalDist == 0 && MPC.goalDist == 0
+    elseif min(APC.error_ego) <= 0.01 && min(MPC.error_ego) <= 0.01
         % Both converged, check who converged faster
-        if APC.convergenceTime < MPC.convergenceTime
+        if max(APC.t) < max(MPC.t)
             result.winner = 'APC';
-            result.APC_wins = 1;
         else
             result.winner = 'MPC';
-            result.MPC_wins = 1;
         end
         return;
-    end
-    
-    % Bonus metric: Computation time or control effort
-    if APC.compTime < MPC.compTime || APC.controlEffort < MPC.controlEffort
-        result.bonus = 1;
-        result.APC_wins = result.APC_wins + 1;
-    elseif MPC.compTime < APC.compTime || MPC.controlEffort < APC.controlEffort
-        result.bonus = -1;
-        result.MPC_wins = result.MPC_wins + 1;
     end
 end
 

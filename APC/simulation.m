@@ -127,6 +127,7 @@ for j=1:K
     control_effort(j)= norm(([tau_l_mrac(j);tau_r_mrac(j)]-[tau_l_prev;tau_r_prev]),2);    
     tau_l_prev=tau_l_mrac(j);
     tau_r_prev=tau_r_mrac(j);
+    
     robot.m_p=master.m_vec(i);
     robot.l=master.l_vec(i);
     fbk= robot.PropagateRobotDynamics(fbk,[tau_l_mrac(j);tau_r_mrac(j);]);

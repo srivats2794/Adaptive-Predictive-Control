@@ -59,7 +59,7 @@ end
 
 cascaded.t= t;
 cascaded.obs_mapping= obs_mapping;
-cascaded.violation_line= pl.ego_safety_diam/2 + sim.obs_diam/2;
+cascaded.violation_line= 0.55;
 cascaded.error_ego= error_ego;
 cascaded.control_effort= control_effort;
 cascaded.tau_l = tau_l;
