@@ -3,7 +3,6 @@ mrac_switch=2; % 0 for no MRAC, 1 for all 3 gains, 2 for only error gain
 
 
 %% SETUP ENV
-scene = 1; % 1 or 2
 addpath("PLANT\","LMPC\","HELPERS\","PLANNER\","MRAC\");
 
 %% SAMPLING TIMES
@@ -16,13 +15,8 @@ robot= ROBOT(setupRobotParams,simTs,1); % Plant
 sim.x0= [0.75 ; 0.65 ;0; 0; 0;0;0]; % Initial condition
 sim.xf= [1.8; 3.25 ; pi/2; 0; 0;0;0]; % Final condition
 sim.obs_num=4; sim.obs_diam = 0.6; % Obstacle Info
-if scene==1
-    sim.obs_x= [0.9;2.2;1.1;2.5;]; % Obstacle X positions
-    sim.obs_y= [1.5;1.75;2.8;3]; % Obstacle Y positions
-else
-    sim.obs_x= [0.3;0.9;1.5;2.1;]; % Obstacle X positions
-    sim.obs_y= [1.5;1.5;1.5;1.5];% Obstacle Y positions
-end
+sim.obs_x= [0.9;2.2;1.1;2.5;]; % Obstacle X positions
+sim.obs_y= [1.5;1.75;2.8;3]; % Obstacle Y positions
 
 sim.tsim=  master.tsim; % Max Time
 sim.x_min= 0; sim.x_max= 3; sim.y_min= 0; sim.y_max= 5; % Map bounds
@@ -64,7 +58,7 @@ end
 
 cascaded_adaptive.t= t;
 cascaded_adaptive.obs_mapping= obs_mapping;
-cascaded_adaptive.violation_line= 0.55;
+cascaded_adaptive.violation_line= pl.ego_safety_diam/2 + sim.obs_diam/2;
 cascaded_adaptive.error_ego= error_ego;
 cascaded_adaptive.control_effort= control_effort;
 cascaded_adaptive.exec_time= per_loop_time_mod;

@@ -3,7 +3,6 @@
 % loud=1; % 0 or 1
 
 %% SETUP ENV
-scene = 1;
 addpath("PLANT\","LMPC\","HELPERS\","PLANNER\");
 
 %% SAMPLING TIMES
@@ -17,13 +16,9 @@ robot= ROBOT(setupRobotParams,simTs,1); % Plant
 sim.x0= [0.75 ; 0.65 ;0; 0; 0;0;0]; % Initial condition
 sim.xf= [1.8; 3.25 ; pi/2; 0; 0;0;0]; % Final condition
 sim.obs_num=4; sim.obs_diam = 0.6; % Obstacle Info
-if scene==1
+
     sim.obs_x= [0.9;2.2;1.1;2.5;]; % Obstacle X positions
     sim.obs_y= [1.5;1.75;2.8;3]; % Obstacle Y positions
-else
-    sim.obs_x= [0.3;0.9;1.5;2.1;]; % Obstacle X positions
-    sim.obs_y= [1.5;1.5;1.5;1.5];% Obstacle Y positions
-end
 
 sim.tsim=  master.tsim; % Max Time
 sim.x_min= 0; sim.x_max= 3; sim.y_min= 0; sim.y_max= 5; % Map bounds
@@ -59,7 +54,7 @@ end
 
 cascaded.t= t;
 cascaded.obs_mapping= obs_mapping;
-cascaded.violation_line= 0.55;
+cascaded.violation_line= pl.ego_safety_diam/2 + sim.obs_diam/2;
 cascaded.error_ego= error_ego;
 cascaded.control_effort= control_effort;
 cascaded.tau_l = tau_l;

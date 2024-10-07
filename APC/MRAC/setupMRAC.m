@@ -35,10 +35,10 @@ function params = setupMRAC(sys,Ts,mpc)
     params.D = zeros(4,2);
 
     [params.Ad,params.Bd,~,~] = ssdata(c2d(ss(params.A,params.B,params.C,params.D),Ts));
-    factor= 1e-2;%5e-2;
-    params.lambda= 3e-1;
+    factor= 1e-2;
+    params.lambda= 0.9;
 
-    params.gamma_err = factor*diag([2;0.5;2;0.5]);
+    params.gamma_err = factor*diag([1;1;0.75;0.5]);
 
     [params.Q,params.Ky0,~]= icare(params.A,params.B,mpc.Q,mpc.R);
     %params.Q= eye(4);

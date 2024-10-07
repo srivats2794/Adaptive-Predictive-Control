@@ -4,11 +4,11 @@ APC_wins=0; MPC_wins=0;
 APC_bonus=0; MPC_bonus=0;
 
 for i=1:1
-    for j=1:100
+    for j=1:10
         clc;clearvars -except APC_wins APC_bonus MPC_wins MPC_bonus i j;
-        perc=i*5;
+        perc=5;
         plot_choice=0;
-        [MPC,APC]= MRAC_startup(perc,plot_choice);
+        [MPC,APC,master]= MRAC_startup(perc,plot_choice);
         results=calculateMetrics(MPC,APC);
         if results.winner=="MPC"
             MPC_wins=MPC_wins+1;
@@ -20,3 +20,6 @@ for i=1:1
     end
 end
 
+save('5_perc_monte_carlo_run.mat')
+
+plotter(MPC,APC,master)

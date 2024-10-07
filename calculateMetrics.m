@@ -40,9 +40,11 @@ function result = calculateMetrics(MPC, APC)
     elseif APC_minDist < APC.violation_line && MPC_minDist < APC.violation_line
         % Both violated, check who violated lesser
         if APC_minDist > MPC_minDist
-            result.APCbonus=result.APCbonus+1;
+           result.winner = 'APC';
+           return;
         else
-            result.MPCbonus=result.MPCbonus+1;
+           result.winner = 'MPC';
+           return;
         end
     end
     

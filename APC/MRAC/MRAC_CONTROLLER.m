@@ -1,7 +1,6 @@
 classdef MRAC_CONTROLLER
     % A class implementation that encapsulates all the MRAC controller properties and methods 
     
-    
     properties
        gamma_st; 
        gamma_err;
@@ -31,14 +30,12 @@ classdef MRAC_CONTROLLER
             obj.lambda= params.lambda;
         end
         
-        function this = updateMRACgains(this,err)
-            
+        function this = updateMRACgains(this,err)           
             err_norm= norm(err,1);
 
             Ke_dot= -this.gamma_err*(err*err')*this.P*this.B-this.lambda*err_norm*this.Ke;
             this.Ke=Ke_dot*this.Ts+this.Ke;
         end
-
     end
 end
 
