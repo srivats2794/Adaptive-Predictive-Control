@@ -34,7 +34,7 @@ mrac= MRAC_CONTROLLER(setupMRAC(setupMPCsystem,ctrlTs,ctrl));
 err_mrac_vec= zeros(4,1);
 X_MRAC_bar_vec= zeros(4,1);
 X_MRAC_vec= zeros(4,1);
-gains_MRAC_vec(1).Ke= mrac.Ke; % Kdel,Ky,Ke
+gains_MRAC_vec(1).Ke= mrac.Ke; 
 %% Viz Setup - For simulation graphics visualization
 viz.w= robot.w;
 viz.l= robot.r_w*2+0.02;

@@ -41,8 +41,7 @@ function params = setupMRAC(sys,Ts,mpc)
     params.gamma_err = factor*diag([1;1;0.75;0.5]);
 
     [params.Q,params.Ky0,~]= icare(params.A,params.B,mpc.Q,mpc.R);
-    %params.Q= eye(4);
-    %params.Q= mpc.Q;
+
     params.P= lyap((params.A-params.B*params.Ky0),params.Q);
     
     params.Ke= zeros(4,2);
