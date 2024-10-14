@@ -130,6 +130,7 @@ for j=1:K
     
     robot.m_p=master.m_vec(i);
     robot.l=master.l_vec(i);
+    robot.j_psi= varyJpsi(robot.m_p,robot.l,fbk_lin(3));
     fbk= robot.PropagateRobotDynamics(fbk,[tau_l_mrac(j);tau_r_mrac(j);]);
     
     X_MRAC_vec(:,j+1)= fbk(4:7);

@@ -131,7 +131,7 @@ for j=1:K
     % Update m_p(k) and l_p(k)    
     robot.m_p=master.m_vec(i);
     robot.l=master.l_vec(i);
-    
+    robot.j_psi= varyJpsi(robot.m_p,robot.l,fbk_lin(3));
     % Simulate nonlinear plant
     fbk= robot.PropagateRobotDynamics(fbk,[tau_l(j);tau_r(j)]);
 

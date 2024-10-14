@@ -31,9 +31,9 @@ classdef MRAC_CONTROLLER
         end
         
         function this = updateMRACgains(this,err)           
-            err_norm= norm(err,1);
+            err_norm= norm(err,2);
 
-            Ke_dot= -this.gamma_err*(err*err')*this.P*this.B-this.lambda*err_norm*this.Ke;
+            Ke_dot= -this.gamma_err*(err*err')*this.P*this.B;%-this.lambda*err_norm*this.Ke;
             this.Ke=Ke_dot*this.Ts+this.Ke;
         end
     end
